@@ -65,7 +65,9 @@ document.addEventListener('DOMContentLoaded', () => {
         btnPrint: document.getElementById('btn-print'),
         btnReset: document.getElementById('btn-reset'),
         btnShare: document.getElementById('btn-share'),
-        btnCsv: document.getElementById('btn-csv')
+        btnCsv: document.getElementById('btn-csv'),
+        themeToggle: document.getElementById('theme-toggle'),
+        floatingThemeToggle: document.getElementById('floating-theme-toggle')
     };
 
     // --- Initialization Module ---
@@ -770,7 +772,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- UI/UX Interactive Event Core Handlers ---
     function registerEventHandlers() {
-        elements.themeToggle.addEventListener('click', toggleThemeMode);
         elements.btnAddItem.addEventListener('click', () => addItemRow());
         
         // Track core focus changes to mirror outputs
@@ -797,6 +798,12 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.btnReset.addEventListener('click', resetBillingConsole);
         elements.btnShare.addEventListener('click', shareInvoice);
         elements.btnCsv.addEventListener('click', exportInvoiceHistoryToCSV);
+        if (elements.themeToggle) {
+            elements.themeToggle.addEventListener('click', toggleThemeMode);
+        }
+        if (elements.floatingThemeToggle) {
+            elements.floatingThemeToggle.addEventListener('click', toggleThemeMode);
+        }
     }
 
     function toggleThemeMode() {
@@ -811,9 +818,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateThemeButtonUI(theme) {
         if (theme === 'dark') {
-            elements.themeToggle.innerHTML = `<i class="fa-solid fa-sun"></i> <span>Light Mode</span>`;
+            if (elements.themeToggle) {
+                elements.themeToggle.innerHTML = `<i class="fa-solid fa-sun"></i> <span>Light Mode</span>`;
+            }
+            if (elements.floatingThemeToggle) {
+                elements.floatingThemeToggle.innerHTML = `<i class="fa-solid fa-sun"></i>`;
+            }
         } else {
-            elements.themeToggle.innerHTML = `<i class="fa-solid fa-moon"></i> <span>Dark Mode</span>`;
+            if (elements.themeToggle) {
+                elements.themeToggle.innerHTML = `<i class="fa-solid fa-moon"></i> <span>Dark Mode</span>`;
+            }
+            if (elements.floatingThemeToggle) {
+                elements.floatingThemeToggle.innerHTML = `<i class="fa-solid fa-moon"></i>`;
+            }
         }
     }
 
