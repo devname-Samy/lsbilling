@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lifestoning Pvt Ltd — Premium Billing System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" type="image/png" href="logo.jpeg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <div class="dashboard-container">
+        
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-logo"><img src="logo.jpeg" alt="Lifestoning Logo" height="50px" width="70px"></div>
+                <div class="brand-info">
+                    <h2>Lifestoning</h2>
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active"><i class="fa-solid fa-file-invoice"></i> Create Invoice</a>
+                <a href="#" class="nav-item tab-disabled"><i class="fa-solid fa-receipt"></i> History</a>
+                <a href="#" class="nav-item tab-disabled"><i class="fa-solid fa-boxes-stacked"></i> Inventory</a>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="theme-toggle" class="theme-btn">
+                    <i class="fa-solid fa-moon"></i> <span>Dark Mode</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="content-header">
+                <div class="header-title">
+                    <h1>Billing & Invoice Panel</h1>
+                    <p>Generate, export, and manage premium GST-compliant invoices.</p>
+                </div>
+                <div class="header-actions">
+                    <button id="btn-reset" class="btn btn-secondary"><i class="fa-solid fa-rotate-right"></i> Reset Form</button>
+                    <button id="btn-print" class="btn btn-secondary"><i class="fa-solid fa-print"></i> Print</button>
+                    <button id="btn-csv" class="btn btn-secondary"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
+                    <button id="btn-share" class="btn btn-gold"><i class="fa-solid fa-share-nodes"></i> Share</button>
+                    <button id="btn-download" class="btn btn-primary"><i class="fa-solid fa-download"></i> Download PDF</button>
+                </div>
+            </header>
+
+            <div class="workspace-grid">
+                <section class="form-pane">
+                    
+                    <div class="form-card">
+                        <div class="card-header">
+                            <i class="fa-solid fa-user-tie"></i> Client & Invoice Details
+                        </div>
+                        <div class="card-body grid-2">
+                            <div class="form-group">
+                                <label for="cust-name">Customer Name *</label>
+                                <input type="text" id="cust-name" placeholder="John Doe" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cust-shop">Shop / Company Name</label>
+                                <input type="text" id="cust-shop" placeholder="Smoke Culture Store">
+                            </div>
+                            <div class="form-group">
+                                <label for="cust-mobile">Mobile Number *</label>
+                                <input type="tel" id="cust-mobile" placeholder="+91 XXXXX XXXXX" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cust-gst">GST Number (Optional)</label>
+                                <input type="text" id="cust-gst" placeholder="09AAAAA0000A1Z5" style="text-transform: uppercase;">
+                            </div>
+                            <div class="form-group grid-span-2">
+                                <label for="cust-address">Billing Address</label>
+                                <textarea id="cust-address" rows="2" placeholder="Street, City, State, ZIP"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="inv-date">Invoice Date</label>
+                                <input type="date" id="inv-date">
+                            </div>
+                            <div class="form-group">
+                                <label for="inv-due">Due Date</label>
+                                <input type="date" id="inv-due">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-card">
+                        <div class="card-header justify-between">
+                            <span><i class="fa-solid fa-cubes"></i> Line Items</span>
+                            <button id="btn-add-item" class="btn btn-sm btn-gold"><i class="fa-solid fa-plus"></i> Add Item</button>
+                        </div>
+                        <div class="card-body row-management">
+                            <div class="table-responsive">
+                                <table class="items-input-table" id="items-entry-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 25%;">Product Name</th>
+                                            <th style="width: 20%;">Category</th>
+                                            <th style="width: 10%;">Qty</th>
+                                            <th style="width: 13%;">Price (₹)</th>
+                                            <th style="width: 10%;">Disc %</th>
+                                            <th style="width: 10%;">GST %</th>
+                                            <th style="width: 12%;">Total</th>
+                                            <th style="width: 5%;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="items-tbody">
+                                        </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-card">
+                        <div class="card-header"><i class="fa-solid fa-credit-card"></i> Payment Status & Metadata</div>
+                        <div class="card-body grid-2">
+                            <div class="form-group">
+                                <label for="pay-method">Payment Method</label>
+                                <select id="pay-method">
+                                    <option value="UPI">UPI</option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="Bank Transfer">Bank Transfer</option>
+                                    <option value="Credit">Credit</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="pay-status">Payment Status</label>
+                                <select id="pay-status">
+                                    <option value="Paid">Paid</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Partial">Partial</option>
+                                </select>
+                            </div>
+                            <div class="form-group grid-span-2">
+                                <label for="invoice-notes">Extra Notes / Terms</label>
+                                <textarea id="invoice-notes" rows="2" placeholder="Thank you for your business! Goods once sold will not be taken back."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="preview-pane">
+                    <div class="preview-sticky-wrap">
+                        <div class="preview-toolbar">
+                            <span><i class="fa-solid fa-eye"></i> Live A4 Print Preview</span>
+                        </div>
+                        
+                        <div id="invoice-print-target" class="invoice-a4-document">
+                            
+                            <div class="inv-doc-header">
+                                <div class="inv-doc-brand">
+                                    <div class="brand-logo"><img src="logo.jpeg" alt="Lifestoning Logo" height="50px" width="70px"></div>
+                                    <div>
+                                        <h1 class="doc-company-name">Lifestoning Pvt. Ltd.</h1>
+                                        <p class="doc-company-sub">Premium Lifestyle & Smoking Accessories</p>
+                                        <p class="doc-company-details">
+                                            Sector-3, Vasundhara, Ghaziabad,<br>
+                                            Uttar Pradesh, India | Contact: +91 8929624443
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="inv-doc-meta">
+                                    <h2 class="invoice-title">TAX INVOICE</h2>
+                                    <table class="meta-display-table">
+                                        <tr>
+                                            <td><strong>Invoice No:</strong></td>
+                                            <td id="lbl-inv-id" class="text-right">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Date:</strong></td>
+                                            <td id="lbl-inv-date" class="text-right">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Due Date:</strong></td>
+                                            <td id="lbl-inv-due" class="text-right">-</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <hr class="doc-divider">
+
+                            <div class="inv-doc-billing">
+                                <div class="bill-to-box">
+                                    <h3>Bill To:</h3>
+                                    <p id="lbl-cust-name" class="highlight-text">-</p>
+                                    <p id="lbl-cust-shop" class="sub-text"></p>
+                                    <p id="lbl-cust-address" class="address-text">-</p>
+                                    <p><strong>Mobile:</strong> <span id="lbl-cust-mobile">-</span></p>
+                                    <p id="lbl-cust-gst-wrap"><strong>GSTIN:</strong> <span id="lbl-cust-gst">-</span></p>
+                                </div>
+                                <div class="payment-summary-box">
+                                    <h3>Payment Info:</h3>
+                                    <p><strong>Method:</strong> <span id="lbl-pay-method">-</span></p>
+                                    <p><strong>Status:</strong> <span id="lbl-pay-status" class="badge">-</span></p>
+                                </div>
+                            </div>
+
+                            <table class="doc-items-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 5%;" class="text-center">#</th>
+                                        <th style="width: 35%;">Item Description</th>
+                                        <th style="width: 15%;">Category</th>
+                                        <th style="width: 8%;" class="text-center">Qty</th>
+                                        <th style="width: 10%;" class="text-right">Rate</th>
+                                        <th style="width: 8%;" class="text-center">Disc</th>
+                                        <th style="width: 8%;" class="text-center">GST</th>
+                                        <th style="width: 11%;" class="text-right">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lbl-items-tbody">
+                                    </tbody>
+                            </table>
+
+                            <div class="doc-summary-section">
+                                <div class="summary-left">
+                                    <div class="notes-box">
+                                        <h4>Notes & Terms:</h4>
+                                        <p id="lbl-notes">Thank you for parsing business with Lifestoning Pvt Ltd.</p>
+                                    </div>
+                                    <div class="qr-placeholder-wrapper">
+                                        <div class="qr-box">
+                                            <img src="paymentqr.jpeg" alt="payment-qr-code" height="120px" width="120px">
+                                            <br>
+                                            <span>Scan to Pay</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="summary-right">
+                                    <table class="totals-display-table">
+                                        <tr>
+                                            <td>Subtotal:</td>
+                                            <td id="lbl-subtotal">₹0.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Discount Total:</td>
+                                            <td id="lbl-discount">₹0.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>CGST Split:</td>
+                                            <td id="lbl-cgst">₹0.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>SGST Split:</td>
+                                            <td id="lbl-sgst">₹0.00</td>
+                                        </tr>
+                                        <tr class="row-roundoff">
+                                            <td>Round Off:</td>
+                                            <td id="lbl-roundoff">₹0.00</td>
+                                        </tr>
+                                        <tr class="row-grand-total">
+                                            <td>Grand Total:</td>
+                                            <td id="lbl-grandtotal">₹0.00</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="doc-signature-area">
+                                <div class="sig-block">
+                                    <p>Customer Signature</p>
+                                    <div class="sig-line"></div>
+                                </div>
+                                <div class="sig-block text-right">
+                                    <p>For Lifestoning Pvt Ltd</p>
+                                    <div class="sig-line signature-space">Authorized Signatory</div>
+                                </div>
+                            </div>
+
+                            <footer class="doc-footer">
+                                <p>This is a computer-generated invoice and requires no physical signature.</p>
+                            </footer>
+
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
